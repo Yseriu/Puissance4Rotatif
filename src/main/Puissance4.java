@@ -5,31 +5,23 @@ package main;
  */
 public class Puissance4 {
 
-    protected char[][] map;
+    protected char[][] map = {{' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}};
     protected int[] remainingRotations = {4, 4};
     protected int[] remainigPreviews = {2, 2};
     protected char player = 'X';
-    protected P4UI ui;
 
     public boolean canPlay(int col)
     {
         return this.getMapItem(col, 0) == ' ';
     }
 
-    public Puissance4 play(int col)
-    {
-        if(!this.canPlay(col)) return null;
+    public Puissance4 play(int col) {
+        if (!this.canPlay(col)) return null;
         int i = 6;
-        while(getMapItem(col, i) != ' ') i--;
+        while (getMapItem(col, i) != ' ') i--;
         this.setMapItem(col, i, this.getPlayer());
         this.changePlayer();
         return this;
-    }
-    public char[][] initMap()
-    {
-        char[][] lmap = {{' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}};
-        this.setMap(lmap);
-        return lmap;
     }
 
     public void changePlayer()
@@ -44,8 +36,7 @@ public class Puissance4 {
 
     public Puissance4()
     {
-        this.initMap();
-        this.setUi(new P4UI(this));
+        new P4UI(this);
     }
 
     public void setMapItem(int x, int y, char p)
@@ -114,13 +105,5 @@ public class Puissance4 {
     public boolean canUsePreview(char player)
     {
         return this.getRemainigPreviews()[player == 'X' ? 0 : 1] > 0;
-    }
-
-    public P4UI getUi() {
-        return ui;
-    }
-
-    public void setUi(P4UI ui) {
-        this.ui = ui;
     }
 }
