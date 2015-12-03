@@ -15,6 +15,13 @@ public class gamePane extends JPanel implements MouseListener {
 
     @Override
     protected void paintComponent(Graphics g) {
+        if(this.getGame().isWon())
+        {
+            this.removeMouseListener(this);
+            this.paintWon(g);
+
+        }
+        super.paintComponent(g);
         int elemDim = this.getHeight()/7;
         for(int i = 0; i < 7; i++)
         {
@@ -35,13 +42,24 @@ public class gamePane extends JPanel implements MouseListener {
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString("Tourner", (int)(this.getWidth()*0.74), (int)(this.getHeight()*0.2));
-        g.drawString("Prévisualiser", (int)(this.getWidth()*0.74), (int)(this.getHeight()*0.4));
+        g.drawString("Tourner ("+this.getGame().getRemainingRotations()[this.getGame().getPlayer() == 'X' ? 0 : 1]+")", (int)(this.getWidth()*0.65), (int)(this.getHeight()*0.2));
+        g.drawString("Prévisualiser ("+this.getGame().getRemainigPreviews()[this.getGame().getPlayer() == 'X' ? 0 : 1]+")", (int)(this.getWidth()*0.65), (int)(this.getHeight()*0.4));
+        font = new Font("Arial", Font.BOLD, 16);
+        g.setFont(font);
+        g.setColor(this.getGame().getPlayer() == 'X' ? Color.YELLOW : Color.RED);
+        g.fillOval((int)(this.getWidth()*0.75), (int)(this.getHeight()*0.55), (int)(0.8*elemDim), (int)(0.8*elemDim));
+        g.setColor(Color.BLACK);
+        g.drawString(Integer.toString(this.getGame().getRemainingTokens()[this.getGame().getPlayer() == 'X' ? 0 : 1]), (int)(this.getWidth()*0.775+0.25*0*elemDim), (int)(this.getHeight()*0.625));
     }
 
     public gamePane(Puissance4 game) {
         this.setGame(game);
         this.addMouseListener(this);
+    }
+
+    public void paintWon(Graphics g)
+    {
+
     }
 
     @Override
@@ -51,11 +69,11 @@ public class gamePane extends JPanel implements MouseListener {
         {
             int h = this.getHeight();
             int y = (int)(this.getMousePosition().getY());
-            if(y < 0.3*h && y >= 0.1*h)
+            if(y < 0.3*h && y >= 0.1*h && this.getGame().canUseRotation())
             {
                System.out.println("Tourner");
             }
-            else if (y < 0.5*h && y >= 0.3*h)
+            else if (y < 0.5*h && y >= 0.3*h && this.getGame().canUsePreview())
             {
                 System.out.println("Prévisualiser");
             }

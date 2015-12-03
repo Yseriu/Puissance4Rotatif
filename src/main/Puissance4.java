@@ -6,9 +6,11 @@ package main;
 public class Puissance4 {
 
     protected char[][] map = {{' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}};
-    protected int[] remainingRotations = {4, 4};
+    protected int[] remainingRotations = {4, 2};
     protected int[] remainigPreviews = {2, 2};
+    protected int[] remainingTokens = {21, 21};
     protected char player = 'X';
+    protected boolean IA = false;
 
     public boolean canPlay(int col)
     {
@@ -20,8 +22,18 @@ public class Puissance4 {
         int i = 6;
         while (getMapItem(col, i) != ' ') i--;
         this.setMapItem(col, i, this.getPlayer());
+        this.useToken();
         this.changePlayer();
+
+        if(this.isIA() && this.getPlayer() == 'O')
+        {
+            this.play(this.IA());
+        }
         return this;
+    }
+
+    private int IA() {
+        return 1;
     }
 
     public void changePlayer()
@@ -32,6 +44,9 @@ public class Puissance4 {
     public static void main(String args[])
     {
         Puissance4 game = new Puissance4();
+        if(args.length > 0)
+            if (args[0] == "ia")
+                game.setIA(true);
     }
 
     public Puissance4()
@@ -97,13 +112,40 @@ public class Puissance4 {
         this.setRemainingRotations(lr);
     }
 
-    public boolean canUseRotation(char player)
+    public void useToken()
     {
-        return this.getRemainingRotations()[player == 'X' ? 0 : 1] > 0;
+        int[] lt = this.getRemainingTokens();
+        lt[this.getPlayer() == 'X' ? 0 : 1]--;
+        this.setRemainingTokens(lt);
     }
 
-    public boolean canUsePreview(char player)
+    public boolean canUseRotation()
     {
-        return this.getRemainigPreviews()[player == 'X' ? 0 : 1] > 0;
+        return this.getRemainingRotations()[this.getPlayer() == 'X' ? 0 : 1] > 0;
+    }
+
+    public boolean canUsePreview()
+    {
+        return this.getRemainigPreviews()[this.getPlayer() == 'X' ? 0 : 1] > 0;
+    }
+
+    public int[] getRemainingTokens() {
+        return remainingTokens;
+    }
+
+    public void setRemainingTokens(int[] remainingTokens) {
+        this.remainingTokens = remainingTokens;
+    }
+
+    public boolean isWon() {
+        return false;
+    }
+
+    public boolean isIA() {
+        return IA;
+    }
+
+    public void setIA(boolean IA) {
+        this.IA = IA;
     }
 }
