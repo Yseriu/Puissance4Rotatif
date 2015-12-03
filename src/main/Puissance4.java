@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Created by Yseriu on 26/11/2015.
  */
@@ -7,27 +9,27 @@ public class Puissance4 {
     protected int[] remainingRotations = {4, 4};
     protected int[] remainigPreviews = {2, 2};
     protected char player = 'X';
+    protected P4UI ui;
 
-    public void play(int col) {}
-    public boolean canPlay(int col) {}
-    public boolean isValidColumn(int col) {}
-    public int ask() {}
-    public void disp()
+    public boolean canPlay(int col)
     {
-        for (int i = 0; i < 7; i++)
-        {
-            for (int j = 0; j < 7; j++)
-            {
-                System.out.print(this.getMap()[i][j]);
-            }
-            System.out.println();
-        }
+        return this.getMapItem(col, 0) == ' ';
     }
-    public void initMap()
+
+    public Puissance4 play(int col)
     {
-        char[] line = {' ', ' ', ' ', ' ', ' ', ' ', ' '};
-        char[][] lmap = {line, line, line, line, line, line, line};
+        if(!this.canPlay(col)) return null;
+        int i = 6;
+        while(getMapItem(col, i) != ' ') i--;
+        this.setMapItem(col, i, this.getPlayer());
+        this.changePlayer();
+        return this;
+    }
+    public char[][] initMap()
+    {
+        char[][] lmap = {{' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}};
         this.setMap(lmap);
+        return lmap;
     }
 
     public void changePlayer()
@@ -37,19 +39,25 @@ public class Puissance4 {
 
     public static void main(String args[])
     {
-
+        Puissance4 game = new Puissance4();
     }
 
     public Puissance4()
     {
         this.initMap();
+        this.setUi(new P4UI(this));
     }
 
-    public void changeMapItem(int x, int y, char p)
+    public void setMapItem(int x, int y, char p)
     {
         char[][] lmap = this.getMap();
-        lmap[x][y] = p;
+        lmap[y][x] = p;
         this.setMap(lmap);
+    }
+
+    public char getMapItem(int col, int line)
+    {
+        return this.getMap()[line][col];
     }
 
     public int[] getRemainingRotations() {
@@ -106,5 +114,13 @@ public class Puissance4 {
     public boolean canUsePreview(char player)
     {
         return this.getRemainigPreviews()[player == 'X' ? 0 : 1] > 0;
+    }
+
+    public P4UI getUi() {
+        return ui;
+    }
+
+    public void setUi(P4UI ui) {
+        this.ui = ui;
     }
 }
