@@ -7,54 +7,63 @@ import java.awt.event.MouseListener;
 
 public class gamePane extends JPanel implements MouseListener {
 
-    protected Puissance4 game;
+    protected AbstractP4 game;
 
     @Override
     protected void paintComponent(Graphics g) {
-        if(this.getGame().isWon())
-        {
-            this.getGame().setPhase(Puissance4.PHASE_WON);
-        }
-        if(this.getGame().getPhase() == Puissance4.PHASE_MENU)
-        {
-
-        }
         super.paintComponent(g);
+
+        switch (this.getGame().getPhase())
+        {
+            case AbstractP4.PHASE_MENU:
+                break;
+
+            case AbstractP4.PHASE_GAME:
+                this.paintGameBoard(g);
+                break;
+
+            case AbstractP4.PHASE_WON:
+                break;
+        }
+
+    }
+    protected void paintGameBoard(Graphics g)
+    {
         int elemDim = this.getHeight()/7;
         for(int i = 0; i < 7; i++)
         {
-            for(int j = 0; j < 7; j++)
-            {
+            for(int j = 0; j < 7; j++) {
                 g.setColor(Color.GRAY);
-                g.fillRect(i*elemDim,j*elemDim,elemDim, elemDim);
+                g.fillRect(i * elemDim, j * elemDim, elemDim, elemDim);
 
-                switch (this.getGame().getMapItem(i, j))
-                {
-                    case 'O': g.setColor(Color.RED);break;
-                    case 'X': g.setColor(Color.YELLOW);break;
-                    default: g.setColor(Color.WHITE);break;
-                }
+                if (this.getGame().getMapItem(i, j) == AbstractP4.PLAYER_1)
+                    g.setColor(AbstractP4.PLAYER_COLOR_1);
+                else if (this.getGame().getMapItem(i, j) == AbstractP4.PLAYER_2)
+                    g.setColor(AbstractP4.PLAYER_COLOR_2);
+                else
+                    g.setColor(AbstractP4.PLAYER_COLOR_NULL);
+
                 g.fillOval((int)(0.1*elemDim)+i*elemDim, (int)(0.1*elemDim)+j*elemDim, (int)(0.8*elemDim), (int)(0.8*elemDim));
             }
         }
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
         g.setColor(Color.BLACK);
-        int rot = this.getGame().getRemainingRotations()[this.getGame().getPlayer() == 'X' ? 0 : 1];
-        int prev = this.getGame().getRemainigPreviews()[this.getGame().getPlayer() == 'X' ? 0 : 1];
+        int rot = this.getGame().getRemainingRotations();
+        int prev = this.getGame().getRemainingPreviews();
         g.setColor(rot > 0 ? Color.BLACK : Color.GRAY);
         g.drawString("Tourner ("+rot+")", (int)(this.getWidth()*0.65), (int)(this.getHeight()*0.2));
         g.setColor(prev > 0 ? Color.BLACK : Color.GRAY);
         g.drawString("Prévisualiser ("+prev+")", (int)(this.getWidth()*0.65), (int)(this.getHeight()*0.4));
         font = new Font("Arial", Font.BOLD, 16);
         g.setFont(font);
-        g.setColor(this.getGame().getPlayer() == 'X' ? Color.YELLOW : Color.RED);
+        g.setColor(this.getGame().getPlayer() == AbstractP4.PLAYER_1 ? AbstractP4.PLAYER_COLOR_1 : AbstractP4.PLAYER_COLOR_2);
         g.fillOval((int)(this.getWidth()*0.75), (int)(this.getHeight()*0.55), (int)(0.8*elemDim), (int)(0.8*elemDim));
         g.setColor(Color.BLACK);
-        g.drawString(Integer.toString(this.getGame().getRemainingTokens()[this.getGame().getPlayer() == 'X' ? 0 : 1]), (int)(this.getWidth()*0.775+0.25*0*elemDim), (int)(this.getHeight()*0.625));
+        g.drawString(Integer.toString(this.getGame().getRemainingTokens()), (int)(this.getWidth()*0.775+0.25*0*elemDim), (int)(this.getHeight()*0.625));
     }
 
-    public gamePane(Puissance4 game) {
+    public gamePane(AbstractP4 game) {
         this.setGame(game);
         this.addMouseListener(this);
     }
@@ -81,7 +90,7 @@ public class gamePane extends JPanel implements MouseListener {
             }
         }
         else
-            this.setGame(this.getGame().play(w));
+            this.getGame().play(w);
         this.repaint();
     }
 
@@ -105,11 +114,11 @@ public class gamePane extends JPanel implements MouseListener {
 
     }
 
-    public Puissance4 getGame() {
+    public AbstractP4 getGame() {
         return game;
     }
 
-    public void setGame(Puissance4 game) {
+    public void setGame(AbstractP4 game) {
         if(game != null) this.game = game;
     }
 }

@@ -1,14 +1,13 @@
 package GUI;
 
 import javax.swing.*;
-import java.util.function.Function;
 
 public class P4UI extends JFrame
 {
     /**
      * @param game
      */
-    public P4UI(Object game) {
+    public P4UI(AbstractP4 game) {
         this.setTitle("Puissance 4 Rotatif");
         this.setSize(550, 380);
         this.setLocationRelativeTo(null);
