@@ -86,6 +86,13 @@ public class gamePane extends JPanel implements MouseListener {
 
     }
 
+    public void enterGamePhase(boolean ia)
+    {
+        this.getGame().setIA(ia);
+        this.getGame().setPhase(AbstractP4.PHASE_GAME);
+        this.getGame().init();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -96,16 +103,15 @@ public class gamePane extends JPanel implements MouseListener {
                     && this.getMousePosition().getY() > this.getHeight()*0.2
                     && this.getMousePosition().getY() < this.getHeight()*0.8)
             {
-                this.getGame().setIA(true);
-                this.getGame().setPhase(AbstractP4.PHASE_GAME);
+                this.enterGamePhase(true);
             }
             else if(this.getMousePosition().getX() > this.getWidth()*0.55
                     && this.getMousePosition().getX() < this.getWidth()*0.95
                     && this.getMousePosition().getY() > this.getHeight()*0.2
                     && this.getMousePosition().getY() < this.getHeight()*0.8)
             {
-                this.getGame().setIA(false);
-                this.getGame().setPhase(AbstractP4.PHASE_GAME);
+                this.enterGamePhase(false);
+
             }
         }
         else if(this.getGame().getPhase() == AbstractP4.PHASE_GAME)

@@ -6,19 +6,19 @@ public class Puissance4 extends AbstractP4 {
     protected int[] remainingRotations = {4, 4};
     protected int[] remainingPreviews = {2, 2};
     protected int[] remainingTokens = {21, 21};
-    protected char player = PLAYER_1;
+    protected char player;
     protected boolean IA = false;
     protected int phase = PHASE_MENU;
 
     public boolean canPlay(int col)
     {
-        return this.getMapItem(col, 0) == ' ';
+        return this.getMapItem(col, 0) == Puissance4.PLAYER_NONE;
     }
 
     public void play(int col) {
         if (this.canPlay(col)) {
             int i = 6;
-            while (getMapItem(col, i) != ' ') i--;
+            while (getMapItem(col, i) != Puissance4.PLAYER_NONE) i--;
             this.setMapItem(col, i, this.getPlayer());
             this.useToken();
             this.changePlayer();
@@ -28,7 +28,7 @@ public class Puissance4 extends AbstractP4 {
     }
 
     private void IA() {
-        if(this.isIA() && this.getPlayer() == 'O')
+        if(this.isIA() && this.getPlayer() == Puissance4.PLAYER_2)
         {
             this.play(1);
         }
@@ -41,12 +41,7 @@ public class Puissance4 extends AbstractP4 {
 
     public static void main(String args[])
     {
-        Puissance4 game = new Puissance4();
-    }
-
-    public Puissance4()
-    {
-        new P4UI(this);
+        new Puissance4();
     }
 
     public void setMapItem(int x, int y, char p)
@@ -144,5 +139,11 @@ public class Puissance4 extends AbstractP4 {
 
     public void setPhase(int phase) {
         this.phase = phase;
+    }
+
+    @Override
+    public void init() {
+        this.setPlayer(Math.random() > 0.5 ? Puissance4.PLAYER_1 : Puissance4.PLAYER_2);
+        this.IA();
     }
 }

@@ -10,6 +10,7 @@ public abstract class AbstractP4 {
 
     protected static char PLAYER_1 = 'X';
     protected static char PLAYER_2 = 'O';
+    protected static char PLAYER_NONE = ' ';
 
     protected static Color PLAYER_COLOR_1 = Color.RED;
     protected static Color PLAYER_COLOR_2 = Color.YELLOW;
@@ -42,4 +43,10 @@ public abstract class AbstractP4 {
     public abstract void setPhase(int phase);
 
     public abstract void setIA(boolean IA);
+
+    public abstract void init();
+
+    public AbstractP4() {
+        new P4UI(this);
+    }
 }
