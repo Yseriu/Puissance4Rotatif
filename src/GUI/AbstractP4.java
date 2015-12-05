@@ -38,4 +38,8 @@ public abstract class AbstractP4 {
      * @return La phase de jeu actuelle parmis les constantes PHASE_* de cette classe.
      */
     public abstract int getPhase();
+
+    public abstract void setPhase(int phase);
+
+    public abstract void setIA(boolean IA);
 }

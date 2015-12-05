@@ -8,7 +8,7 @@ public class Puissance4 extends AbstractP4 {
     protected int[] remainingTokens = {21, 21};
     protected char player = PLAYER_1;
     protected boolean IA = false;
-    protected int phase = PHASE_GAME;
+    protected int phase = PHASE_MENU;
 
     public boolean canPlay(int col)
     {

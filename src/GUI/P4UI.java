@@ -4,9 +4,6 @@ import javax.swing.*;
 
 public class P4UI extends JFrame
 {
-    /**
-     * @param game
-     */
     public P4UI(AbstractP4 game) {
         this.setTitle("Puissance 4 Rotatif");
         this.setSize(550, 380);
