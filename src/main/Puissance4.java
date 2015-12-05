@@ -1,16 +1,18 @@
 package main;
 
-/**
- * Created by Yseriu on 26/11/2015.
- */
 public class Puissance4 {
 
     protected char[][] map = {{' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}, {' ', ' ', ' ', ' ', ' ', ' ', ' '}};
-    protected int[] remainingRotations = {4, 2};
+    protected int[] remainingRotations = {4, 4};
     protected int[] remainigPreviews = {2, 2};
     protected int[] remainingTokens = {21, 21};
     protected char player = 'X';
     protected boolean IA = false;
+    protected int phase = 0;
+
+    protected static int PHASE_MENU = 0;
+    protected static int PHASE_GAME = 1;
+    protected static int PHASE_WON = 2;
 
     public boolean canPlay(int col)
     {
@@ -25,15 +27,16 @@ public class Puissance4 {
         this.useToken();
         this.changePlayer();
 
-        if(this.isIA() && this.getPlayer() == 'O')
-        {
-            this.play(this.IA());
-        }
+        this.IA();
+
         return this;
     }
 
-    private int IA() {
-        return 1;
+    private void IA() {
+        if(this.isIA() && this.getPlayer() == 'O')
+        {
+            this.play(1);
+        }
     }
 
     public void changePlayer()
@@ -44,9 +47,6 @@ public class Puissance4 {
     public static void main(String args[])
     {
         Puissance4 game = new Puissance4();
-        if(args.length > 0)
-            if (args[0] == "ia")
-                game.setIA(true);
     }
 
     public Puissance4()
@@ -147,5 +147,13 @@ public class Puissance4 {
 
     public void setIA(boolean IA) {
         this.IA = IA;
+    }
+
+    public int getPhase() {
+        return phase;
+    }
+
+    public void setPhase(int phase) {
+        this.phase = phase;
     }
 }

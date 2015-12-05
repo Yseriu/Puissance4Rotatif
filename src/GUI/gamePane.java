@@ -1,4 +1,4 @@
-package main;
+package GUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +73,7 @@ public class gamePane extends JPanel implements MouseListener {
             int y = (int)(this.getMousePosition().getY());
             if(y < 0.3*h && y >= 0.1*h && this.getGame().canUseRotation())
             {
-               System.out.println("Tourner");
+                System.out.println("Tourner");
             }
             else if (y < 0.5*h && y >= 0.3*h && this.getGame().canUsePreview())
             {
