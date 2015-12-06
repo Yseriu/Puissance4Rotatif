@@ -20,6 +20,37 @@ public abstract class AbstractP4 {
     protected static Color PLAYER_COLOR_2 = Color.YELLOW;
     protected static Color PLAYER_COLOR_NULL = Color.WHITE;
 
+    private P4UI UI;
+
+    protected p4Pane pane;
+
+    protected p4Pane getPane() { return pane; }
+
+    protected void repaint()
+    {
+        this.getPane().instaPaint();
+    }
+
+    /**
+     * @param phase
+     * @param p2 either the game type, or the winner
+     */
+    protected void changePhase(int phase, int p2) { changePhase(phase, p2, false);}
+    protected void changePhase(int phase, int p2, boolean hosting)
+    {
+        if(phase == AbstractP4.PHASE_GAME)
+        {
+            this.setPhase(AbstractP4.PHASE_GAME);
+            this.setPane(new gamePane(this));
+            this.getUI().changeContentPane(this.getPane());
+            this.setType(p2);
+            this.initLan(hosting);
+            this.init();
+        }
+        this.repaint();
+    }
+
+
     public abstract void play(int col);
 
     public abstract char getMapItem(int col, int line);
@@ -55,7 +86,16 @@ public abstract class AbstractP4 {
     public abstract void initLan(boolean isServer);
 
     public AbstractP4() {
-        new P4UI(this);
+        this.setPane(new menuPane(this));
+        UI = new P4UI(this.getPane());
+    }
+
+    public void setPane(p4Pane pane) {
+        this.pane = pane;
+    }
+
+    public P4UI getUI() {
+        return UI;
     }
 
     public void debug() {}

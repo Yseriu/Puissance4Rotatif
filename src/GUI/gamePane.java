@@ -5,33 +5,18 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class gamePane extends JPanel implements MouseListener {
+public class gamePane extends p4Pane {
 
     protected AbstractP4 game;
-    public static final Font font20 = new Font("Arial", Font.BOLD, 20);
-    public static final Font font16 = new Font("Arial", Font.BOLD, 16);
+
+    public gamePane(AbstractP4 game) {
+        super(game);
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        switch (this.getGame().getPhase())
-        {
-            case AbstractP4.PHASE_MENU:
-                this.paintMenuBoard(g);
-                break;
-
-            case AbstractP4.PHASE_GAME:
-                this.paintGameBoard(g);
-                break;
-
-            case AbstractP4.PHASE_WON:
-                break;
-        }
-
-    }
-    protected void paintGameBoard(Graphics g)
-    {
         int elemDim = this.getHeight()/7;
         for(int i = 0; i < 7; i++)
         {
@@ -62,84 +47,33 @@ public class gamePane extends JPanel implements MouseListener {
         g.fillOval((int)(this.getWidth()*0.75), (int)(this.getHeight()*0.55), (int)(0.8*elemDim), (int)(0.8*elemDim));
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(this.getGame().getRemainingTokens()), (int)(this.getWidth()*0.775+0.25*0*elemDim), (int)(this.getHeight()*0.625));
-    }
 
-    protected void paintMenuBoard(Graphics g)
-    {
-        g.setFont(font20);
-        g.setColor(Color.PINK);
-        g.fillRect((int)(0.05*this.getWidth()), (int)(0.2*this.getHeight()), (int)(0.40*this.getWidth()), (int)(0.6*this.getHeight()));
-        g.fillRect((int)(0.55*this.getWidth()), (int)(0.2*this.getHeight()), (int)(0.40*this.getWidth()), (int)(0.6*this.getHeight()));
-
-        g.setColor(Color.BLACK);
-        g.drawString("1 Joueur", (int)(0.17*this.getWidth()), (int)(0.5*this.getHeight()));
-        g.drawString("2 Joueurs", (int)(0.66*this.getWidth()), (int)(0.5*this.getHeight()));
-    }
-
-    public gamePane(AbstractP4 game) {
-        this.setGame(game);
-        this.addMouseListener(this);
-    }
-
-    public void paintWon(Graphics g)
-    {
-
-    }
-
-    public void enterGamePhase(int type)
-    {
-        this.getGame().setType(AbstractP4.TYPE_LAN);
-        this.getGame().setPhase(AbstractP4.PHASE_GAME);
-        this.getGame().initLan(type == 1);
-        this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-        if(this.getGame().getPhase() == AbstractP4.PHASE_MENU)
+        // Listener for phase Menu
+        int w = (int)(this.getMousePosition().getX()/(this.getHeight()/7));
+        if (w >= 7)
         {
-            if(this.getMousePosition().getX() > this.getWidth()*0.05
-                    && this.getMousePosition().getX() < this.getWidth()*0.45
-                    && this.getMousePosition().getY() > this.getHeight()*0.2
-                    && this.getMousePosition().getY() < this.getHeight()*0.8)
+            int h = this.getHeight();
+            int y = (int)(this.getMousePosition().getY());
+            if(y < 0.3*h && y >= 0.1*h && this.getGame().canUseRotation())
             {
-                this.enterGamePhase(AbstractP4.TYPE_IA);
+                System.out.println("Tourner");
             }
-            else if(this.getMousePosition().getX() > this.getWidth()*0.55
-                    && this.getMousePosition().getX() < this.getWidth()*0.95
-                    && this.getMousePosition().getY() > this.getHeight()*0.2
-                    && this.getMousePosition().getY() < this.getHeight()*0.8)
+            else if (y < 0.5*h && y >= 0.3*h && this.getGame().canUsePreview())
             {
-                this.enterGamePhase(AbstractP4.TYPE_LOCAL);
-
+                System.out.println("Prévisualiser");
             }
         }
-        else if(this.getGame().getPhase() == AbstractP4.PHASE_GAME)
-        {
-            int w = (int)(this.getMousePosition().getX()/(this.getHeight()/7));
-            if (w >= 7)
-            {
-                int h = this.getHeight();
-                int y = (int)(this.getMousePosition().getY());
-                if(y < 0.3*h && y >= 0.1*h && this.getGame().canUseRotation())
-                {
-                    System.out.println("Tourner");
-                }
-                else if (y < 0.5*h && y >= 0.3*h && this.getGame().canUsePreview())
-                {
-                    System.out.println("Prévisualiser");
-                }
-            }
-            else {
-                this.getGame().debug();
-                this.getGame().play(w);
-                this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
-                this.getGame().SecondPlayer();
-            }
+        else {
+            this.getGame().play(w);
+            this.instaPaint();
+            this.getGame().SecondPlayer();
         }
 
-        this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
+        this.instaPaint();
     }
 
     @Override

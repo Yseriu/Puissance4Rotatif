@@ -89,24 +89,23 @@ public class Puissance4 extends AbstractP4 {
 
     public void initLan(boolean isServer)
     {
-        this.isServer = isServer;
-        if(isServer)
+        if(this.isLAN())
         {
-            System.out.println("Serveside");
-            this.server = new server(Puissance4.PORT);
-            this.init();
-            this.getServer().send(this.getPlayer());
-            System.out.println("Sent player " + this.getPlayer());
-
+            this.isServer = isServer;
+            if (isServer) {
+                System.out.println("Serveside");
+                this.server = new server(Puissance4.PORT);
+                this.init();
+                this.getServer().send(this.getPlayer());
+                System.out.println("Sent player " + this.getPlayer());
+            } else {
+                System.out.println("ClientSide");
+                this.client = new client(Puissance4.PORT);
+                this.setPlayer((char) (this.getClient().recieve()));
+                System.out.println("Recieved player " + this.getPlayer());
+            }
+            this.debug();
         }
-        else
-        {
-            System.out.println("ClientSide");
-            this.client = new client(Puissance4.PORT);
-            this.setPlayer((char)(this.getClient().recieve()));
-            System.out.println("Recieved player " + this.getPlayer());
-        }
-        this.debug();
     }
 
     public void changePlayer()
@@ -214,7 +213,7 @@ public class Puissance4 extends AbstractP4 {
 
     @Override
     public void init() {
-            this.setPlayer(Math.random() > 1 ? Puissance4.PLAYER_1 : Puissance4.PLAYER_2);
+            this.setPlayer(Math.random() > 0 ? Puissance4.PLAYER_1 : Puissance4.PLAYER_2);
     }
 
     public boolean isLAN(){ return this.type == TYPE_LAN; }
