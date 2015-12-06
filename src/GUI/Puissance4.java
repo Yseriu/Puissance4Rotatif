@@ -7,8 +7,13 @@ public class Puissance4 extends AbstractP4 {
     protected int[] remainingPreviews = {2, 2};
     protected int[] remainingTokens = {21, 21};
     protected char player;
-    protected boolean IA = false;
+    protected int type;
     protected int phase = PHASE_MENU;
+    protected boolean isServer = false;
+    protected server server;
+    protected client client;
+
+    protected static int PORT = 12345;
 
     public boolean canPlay(int col)
     {
@@ -16,27 +21,97 @@ public class Puissance4 extends AbstractP4 {
     }
 
     public void play(int col) {
-        if (this.canPlay(col)) {
+        if (this.canPlay(col)
+                && !this.isLAN() // Case not lan
+                || this.getPlayer() == this.whoami() // I am the one to play
+                )
+        {
+            System.out.println("playing !");
+            int i = 6;
+            while (getMapItem(col, i) != Puissance4.PLAYER_NONE) i--;
+            this.setMapItem(col, i, this.getPlayer());
+            this.useToken();
+
+            if(this.isLAN())
+            {
+                System.out.println("Sending "+col);
+                if(this.isServer)
+                    this.getServer().send((char) col);
+                else
+                    this.getClient().send((char) col);
+                System.out.println("col send");
+            }
+
+            this.changePlayer();
+        }
+    }
+    public void playRecieved(int col)
+    {
+        if(this.canPlay(col))
+        {
             int i = 6;
             while (getMapItem(col, i) != Puissance4.PLAYER_NONE) i--;
             this.setMapItem(col, i, this.getPlayer());
             this.useToken();
             this.changePlayer();
-
-            this.IA();
         }
     }
 
-    private void IA() {
+    public void SecondPlayer() {
         if(this.isIA() && this.getPlayer() == Puissance4.PLAYER_2)
         {
-            this.play(1);
+            this.IA();
         }
+        else if (this.isLAN() && this.whoami() != this.getPlayer())
+        {
+            this.LAN();
+        }
+    }
+
+    public void IA()
+    {
+        this.play((int)(Math.random()*6));
+    }
+
+    public void LAN()
+    {
+        int col;
+        System.out.println("Recieving col");
+        if(this.isServer)
+            col = this.getServer().recieve();
+        else
+            col = this.getClient().recieve();
+        System.out.println(" Recieved");
+        this.playRecieved(col);
+
+        this.SecondPlayer();
+    }
+
+    public void initLan(boolean isServer)
+    {
+        this.isServer = isServer;
+        if(isServer)
+        {
+            System.out.println("Serveside");
+            this.server = new server(Puissance4.PORT);
+            this.init();
+            this.getServer().send(this.getPlayer());
+            System.out.println("Sent player " + this.getPlayer());
+
+        }
+        else
+        {
+            System.out.println("ClientSide");
+            this.client = new client(Puissance4.PORT);
+            this.setPlayer((char)(this.getClient().recieve()));
+            System.out.println("Recieved player " + this.getPlayer());
+        }
+        this.debug();
     }
 
     public void changePlayer()
     {
-        this.setPlayer(this.getPlayer() == 'X' ? 'O' : 'X');
+        this.setPlayer(this.getPlayer() == Puissance4.PLAYER_1 ? Puissance4.PLAYER_2 : Puissance4.PLAYER_1);
     }
 
     public static void main(String args[])
@@ -126,11 +201,7 @@ public class Puissance4 extends AbstractP4 {
     }
 
     public boolean isIA() {
-        return IA;
-    }
-
-    public void setIA(boolean IA) {
-        this.IA = IA;
+        return this.type == Puissance4.TYPE_IA;
     }
 
     public int getPhase() {
@@ -143,7 +214,36 @@ public class Puissance4 extends AbstractP4 {
 
     @Override
     public void init() {
-        this.setPlayer(Math.random() > 0.5 ? Puissance4.PLAYER_1 : Puissance4.PLAYER_2);
-        this.IA();
+            this.setPlayer(Math.random() > 1 ? Puissance4.PLAYER_1 : Puissance4.PLAYER_2);
+    }
+
+    public boolean isLAN(){ return this.type == TYPE_LAN; }
+
+    public char whoami() {
+        return this.isServer ? Puissance4.PLAYER_1 : Puissance4.PLAYER_2;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public GUI.server getServer() {
+        return server;
+    }
+
+    public GUI.client getClient() {
+        return client;
+    }
+
+    @Override
+    public void debug() {
+        System.out.println(this.isLAN());
+        System.out.println(this.isServer);
+        System.out.println(this.getPlayer());
+        System.out.println(this.whoami());
     }
 }

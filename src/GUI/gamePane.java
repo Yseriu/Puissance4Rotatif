@@ -86,11 +86,12 @@ public class gamePane extends JPanel implements MouseListener {
 
     }
 
-    public void enterGamePhase(boolean ia)
+    public void enterGamePhase(int type)
     {
-        this.getGame().setIA(ia);
+        this.getGame().setType(AbstractP4.TYPE_LAN);
         this.getGame().setPhase(AbstractP4.PHASE_GAME);
-        this.getGame().init();
+        this.getGame().initLan(type == 1);
+        this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
     }
 
     @Override
@@ -103,14 +104,14 @@ public class gamePane extends JPanel implements MouseListener {
                     && this.getMousePosition().getY() > this.getHeight()*0.2
                     && this.getMousePosition().getY() < this.getHeight()*0.8)
             {
-                this.enterGamePhase(true);
+                this.enterGamePhase(AbstractP4.TYPE_IA);
             }
             else if(this.getMousePosition().getX() > this.getWidth()*0.55
                     && this.getMousePosition().getX() < this.getWidth()*0.95
                     && this.getMousePosition().getY() > this.getHeight()*0.2
                     && this.getMousePosition().getY() < this.getHeight()*0.8)
             {
-                this.enterGamePhase(false);
+                this.enterGamePhase(AbstractP4.TYPE_LOCAL);
 
             }
         }
@@ -130,11 +131,15 @@ public class gamePane extends JPanel implements MouseListener {
                     System.out.println("Prévisualiser");
                 }
             }
-            else
+            else {
+                this.getGame().debug();
                 this.getGame().play(w);
+                this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
+                this.getGame().SecondPlayer();
+            }
         }
 
-        this.repaint();
+        this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
     }
 
     @Override

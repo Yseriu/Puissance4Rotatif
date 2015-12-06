@@ -8,6 +8,10 @@ public abstract class AbstractP4 {
     protected static final int PHASE_GAME = 1;
     protected static final int PHASE_WON = 2;
 
+    protected static final int TYPE_LOCAL = 0;
+    protected static final int TYPE_IA = 1;
+    protected static final int TYPE_LAN = 2;
+
     protected static char PLAYER_1 = 'X';
     protected static char PLAYER_2 = 'O';
     protected static char PLAYER_NONE = ' ';
@@ -42,11 +46,17 @@ public abstract class AbstractP4 {
 
     public abstract void setPhase(int phase);
 
-    public abstract void setIA(boolean IA);
+    public abstract void setType(int type);
+
+    public abstract void SecondPlayer();
 
     public abstract void init();
+
+    public abstract void initLan(boolean isServer);
 
     public AbstractP4() {
         new P4UI(this);
     }
+
+    public void debug() {}
 }
