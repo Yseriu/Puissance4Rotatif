@@ -86,7 +86,7 @@ public abstract class AbstractP4 {
     public abstract void initLan(boolean isServer);
 
     public AbstractP4() {
-        this.setPane(new menuPane(this));
+        this.setPane(new hostingPane(this));
         UI = new P4UI(this.getPane());
     }
 

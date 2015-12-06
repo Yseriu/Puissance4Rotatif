@@ -3,9 +3,6 @@ package GUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-/**
- * Created by Yseriu on 06/12/2015.
- */
 public class menuPane extends p4Pane {
 
     public menuPane(AbstractP4 game) {
@@ -16,7 +13,6 @@ public class menuPane extends p4Pane {
     {
         return new Rectangle((int) (this.getWidth()*0.2), ((int) (this.getHeight()*(0.08*(id+1)+0.15*id))), ((int) (this.getWidth() * 0.6)), ((int) (this.getHeight() * 0.15)));
     }
-    public static Polygon RectangleToPolygon(Rectangle rect) { Polygon result = new Polygon(); result.addPoint(rect.x, rect.y); result.addPoint(rect.x + rect.width, rect.y); result.addPoint(rect.x + rect.width, rect.y + rect.height); result.addPoint(rect.x, rect.y + rect.height); return result; }
 
     @Override
     protected void paintComponent(Graphics g) {
